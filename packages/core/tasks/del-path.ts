@@ -1,5 +1,5 @@
-import fs from "node:fs";
-import { resolve } from "node:path";
+import fs from 'node:fs';
+import { resolve } from 'node:path';
 
 export async function delPath(path: string): Promise<void> {
   try {
@@ -10,14 +10,16 @@ export async function delPath(path: string): Promise<void> {
         const isDirectory = fs.statSync(curPath).isDirectory();
         if (isDirectory) {
           await delPath(curPath); // remove child directory
-        } else {
+        }
+        else {
           fs.unlinkSync(curPath);
         }
       }
       // when empty, remove current directory
       fs.rmdirSync(path);
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error(`Error deleting path ${path}:`, error);
   }
 }

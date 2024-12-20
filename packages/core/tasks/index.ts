@@ -1,2 +1,2 @@
-export * from "./del-path";
-export * from "./run";
+export * from './del-path';
+export * from './run';

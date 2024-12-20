@@ -7,6 +7,8 @@
   ],
   "scripts": {
     "preset:build": "pnpm run -C packages/core preset:build",
+    "play:dev": "pnpm run -C playground dev",
+    "play:build": "pnpm run -C playground build",
     "prepare": "husky install",
     "lint": "eslint ."
   },
@@ -27,8 +29,7 @@
   },
   "lint-staged": {
     "*.{vue,js,ts,tsx,jsx}": [
-      "eslint --fix",
-      "prettier --write --ignore-unknown"
+      "eslint . --fix"
     ]
   }
 }

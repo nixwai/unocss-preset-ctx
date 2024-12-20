@@ -1,2 +1,2 @@
-export * from "./copy-plugin";
-export * from "./dts-plugin";
+export * from './copy-plugin';
+export * from './dts-plugin';
