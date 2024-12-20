@@ -4,12 +4,13 @@ import { presetOutput, presetRoot } from "../paths";
 import { copyPlugin, dtsPlugin } from "../vite-configs";
 
 const entryIndex = resolve(__dirname, "./index.ts");
+const entryHelper = resolve(__dirname, "./helper.ts");
 
 export default defineConfig({
   build: {
     emptyOutDir: false,
     lib: {
-      entry: { index: entryIndex },
+      entry: { index: entryIndex, helper: entryHelper },
       name: "unocss-preset-ctx",
       fileName: "unocss-preset-ctx",
     },

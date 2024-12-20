@@ -17,6 +17,9 @@ importers:
       '@types/node':
         specifier: ^22.10.2
         version: 22.10.2
+      '@unocss-preset/ctx':
+        specifier: workspace:*
+        version: link:packages/presets
       '@unocss/eslint-plugin':
         specifier: ^0.65.1
         version: 0.65.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.2)
@@ -44,9 +47,6 @@ importers:
       '@types/gulp':
         specifier: ^4.0.17
         version: 4.0.17
-      '@unocss-preset/ctx':
-        specifier: workspace:*
-        version: link:../presets
       gulp:
         specifier: ^5.0.0
         version: 5.0.0

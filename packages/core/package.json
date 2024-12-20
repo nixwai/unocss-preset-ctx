@@ -6,7 +6,6 @@
   },
   "devDependencies": {
     "@types/gulp": "^4.0.17",
-    "@unocss-preset/ctx": "workspace:*",
     "gulp": "^5.0.0",
     "gulp-cli": "^3.0.0",
     "rollup-plugin-copy": "^3.5.0",
