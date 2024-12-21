@@ -1,6 +1,10 @@
-import type { CustomRule, PresetCtxOptions } from '../types';
+import type { CustomRule } from '../types';
+import { bool } from './bool';
 import { color } from './color';
+import { reverse } from './reverse';
 
-export function rules(options?: PresetCtxOptions): CustomRule[] {
-  return [color(options)].flat();
-}
+export const rules: CustomRule[] = [
+  bool,
+  reverse,
+  color,
+].flat();

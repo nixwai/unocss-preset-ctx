@@ -1,4 +1,7 @@
-import { presetCtx } from '@unocss-preset/ctx';
+import { presetCtx, themeColors } from '@unocss-preset/ctx';
 import { defineConfig, presetAttributify, presetUno } from 'unocss';
 
-export default defineConfig({ presets: [presetAttributify(), presetUno(), presetCtx({ colors: ['com'] })] });
+export default defineConfig({
+  theme: { colors: themeColors({ primary: '#0099FF' }) },
+  presets: [presetAttributify(), presetUno(), presetCtx()],
+});

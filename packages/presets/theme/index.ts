@@ -1,18 +1,8 @@
 import type { Theme } from '@unocss/preset-mini';
-import type { PresetCtxOptions } from '../types';
 import { mc } from 'magic-color';
 import { ctxName, hslValue } from '../utils';
-import { initCtxThemeColors } from '../utils/color';
 
 type Colors = Theme['colors'];
-
-export function theme(options?: PresetCtxOptions): Theme {
-  const config: Theme = {};
-  if (options?.colors) {
-    config.colors = { ctx: initCtxThemeColors(options.colors) };
-  }
-  return config;
-}
 
 /**
  * Customize theme colors

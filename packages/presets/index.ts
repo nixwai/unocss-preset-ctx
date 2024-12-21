@@ -2,16 +2,16 @@ import type { Theme } from '@unocss/preset-mini';
 import type { PresetCtxOptions } from './types';
 import { definePreset } from 'unocss';
 import { rules } from './rules';
-import { shortcuts } from './shortcuts';
-import { theme } from './theme';
 
-export const presetCtx = definePreset<PresetCtxOptions, Theme>((options) => {
+export const presetCtx = definePreset<PresetCtxOptions, Theme>(() => {
   return {
     name: 'unocss-preset-ctx',
-    theme: theme(options),
-    rules: rules(options),
-    shortcuts,
+    layer: 'unocss-preset-ctx',
+    layers: { 'unocss-preset-ctx': -100 },
+    rules,
   };
 });
+
+export { themeColors } from './theme';
 
 export * from './types';
