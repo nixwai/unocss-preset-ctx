@@ -10,7 +10,7 @@
     "gulp-cli": "^3.0.0",
     "rollup-plugin-copy": "^3.5.0",
     "sucrase": "^3.35.0",
-    "vite": "^6.0.4",
+    "vite": "^6.0.5",
     "vite-plugin-dts": "^4.4.0"
   }
 }
