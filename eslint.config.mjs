@@ -21,6 +21,8 @@ export default antfu(
   },
   {
     rules: {
+      'regexp/no-empty-group': 'off',
+      'regexp/no-empty-capturing-group': 'off',
       'style/semi': ['error', 'always'], // 末尾带分号
       'object-curly-newline': ['error', { multiline: true }], // 花括号内换行规则
     },
