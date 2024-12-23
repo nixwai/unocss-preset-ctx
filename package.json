@@ -17,7 +17,6 @@
     "@types/node": "catalog:",
     "@unocss-preset/ctx": "workspace:*",
     "@unocss/eslint-plugin": "catalog:",
-    "bumpp": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
     "husky": "catalog:",
