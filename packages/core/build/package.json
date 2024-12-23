@@ -22,10 +22,13 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "types/index.d.ts",
-  "files": ["dist", "types"],
+  "files": [
+    "dist",
+    "types"
+  ],
   "devDependencies": {
-    "@unocss/preset-mini": "^0.65.2",
-    "magic-color": "^2.0.0",
-    "unocss": "^0.65.2"
+    "@unocss/preset-mini": "catalog:",
+    "magic-color": "catalog:",
+    "unocss": "catalog:"
   }
 }

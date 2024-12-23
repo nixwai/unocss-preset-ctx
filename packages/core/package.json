@@ -5,12 +5,12 @@
     "preset:build": "gulp -f build/gulp-build.ts"
   },
   "devDependencies": {
-    "@types/gulp": "^4.0.17",
-    "gulp": "^5.0.0",
-    "gulp-cli": "^3.0.0",
-    "rollup-plugin-copy": "^3.5.0",
-    "sucrase": "^3.35.0",
-    "vite": "^6.0.5",
-    "vite-plugin-dts": "^4.4.0"
+    "@types/gulp": "catalog:",
+    "gulp": "catalog:",
+    "gulp-cli": "catalog:",
+    "rollup-plugin-copy": "catalog:",
+    "sucrase": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-dts": "catalog:"
   }
 }
