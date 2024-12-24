@@ -9,9 +9,10 @@ export const zh = defineConfig({
     ],
     sidebar: [
       {
-        text: '简介',
+        text: '指南',
         items: [
           { text: '快速开始', link: '/zh/getting-start' },
+          { text: '定制颜色', link: '/zh/custom-color' },
         ],
       },
     ],

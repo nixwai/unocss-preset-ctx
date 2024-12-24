@@ -1,10 +1,10 @@
 import { resolve } from 'node:path';
 import UnoCSS from 'unocss/vite';
 import { defineConfig } from 'vitepress';
+import { vitepressDemoPlugin } from 'vitepress-demo-plugin';
 import { en } from './en';
 import { zh } from './zh';
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'unocss preset ctx',
   rewrites: { 'en/:rest*': ':rest*' },
@@ -18,6 +18,11 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/nixwai/unocss-preset-ctx' },
     ],
+  },
+  markdown: {
+    config(md) {
+      md.use(vitepressDemoPlugin, { demoDir: resolve(__dirname, '../../examples') });
+    },
   },
   locales: {
     root: {

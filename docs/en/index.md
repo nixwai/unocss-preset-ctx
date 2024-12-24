@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Getting Started
-      link: /en/getting-start
+      link: /getting-start
 
 features:
   - title: Direct use

@@ -15,7 +15,7 @@ unocss-preset-ctx 是一个基于 UnoCSS 扩展的预设库，提供了更多的
 <div class="ctx-c-text_[#3451b2] ctx-c-bg_gray dark:ctx-r-y">
   <span class="c-ctx-c-text-700 bg-ctx-c-bg-300 px-1">Hello</span>
   <span class="c-ctx-c-text-300 bg-ctx-c-bg-700 px-1">World</span>
-</div>
+</div>
 ```
 
 ## 安装
@@ -40,9 +40,14 @@ yarn add -D unocss-preset-ctx
 
 与其他UnoCss预设库一样，使用unocss-preset-ctx需要先在 UnoCss 配置文件中添加该预设库。
 
-```ts twoslash {2,7}
+```ts {2,7}
 import { defineConfig, presetUno } from 'unocss';
 import { presetCtx } from 'unocss-preset-ctx';
 
-export default defineConfig({ presets: [presetUno(), presetCtx()] });
+export default defineConfig({
+  presets: [
+    presetUno(),
+    presetCtx(),
+  ],
+});
 ```

@@ -5,13 +5,14 @@ export const en = defineConfig({
   description: 'Make it easier to create css context variables and modify element styles.',
   themeConfig: {
     nav: [
-      { text: 'Guide', link: '/en/getting-start' },
+      { text: 'Guide', link: '/getting-start' },
     ],
     sidebar: [
       {
-        text: 'Introduction',
+        text: 'Guide',
         items: [
-          { text: 'Getting Start', link: '/en/getting-start' },
+          { text: 'Getting Start', link: '/getting-start' },
+          { text: 'Custom Color', link: '/custom-color' },
         ],
       },
     ],

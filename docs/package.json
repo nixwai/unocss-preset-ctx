@@ -11,7 +11,12 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
+  "dependencies": {
+    "vue": "catalog:"
+  },
   "devDependencies": {
-    "vitepress": "catalog:"
+    "unocss-preset-ctx": "catalog:",
+    "vitepress": "catalog:",
+    "vitepress-demo-plugin": "catalog:"
   }
 }
