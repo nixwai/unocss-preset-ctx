@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Unocss preset ctx"
-  tagline: 更轻松的创建css上下文变量和修改元素样式
+  tagline: 更轻松的创建CSS上下文变量和修改元素样式
   actions:
     - theme: brand
       text: 快速开始
