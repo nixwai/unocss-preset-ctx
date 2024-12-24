@@ -10,7 +10,6 @@ catalog:
   '@unocss/preset-mini': ^0.65.2
   '@vitejs/plugin-vue': ^5.2.1
   '@vue/tsconfig': ^0.7.0
-  bumpp: ^9.9.2
   eslint: ^9.17.0
   eslint-plugin-format: ^0.1.3
   gulp: ^5.0.0

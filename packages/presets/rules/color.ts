@@ -24,35 +24,35 @@ const directionMap: Record<string, string[]> = {
 };
 
 export const color: CustomRule[] = [
-  // Set context colors (ctx-color-${name}_${color})
-  [/^ctx-color-(.+)$/, resolveContextColor],
+  // Set context colors (ctx-c-${name}_${color})
+  [/^ctx-c-(.+)$/, resolveContextColor],
   // Context variable for color
-  [/^(?:text-color|text|color|c)-ctx-(.+)$/, cxtColorResolver('color', 'text')],
-  [/^outline-color-ctx-(.+)$/, cxtColorResolver('outline-color', 'outline-color')],
-  [/^bg-ctx-(.+)$/, cxtColorResolver('background-color', 'bg')],
-  [/^(?:underline|decoration)-ctx-(.+)$/, cxtColorResolver('text-decoration-color', 'line')],
-  [/^ring-offset-ctx-(.+)$/, cxtColorResolver('--un-ring-offset-color', 'ring-offset')],
-  [/^ring-ctx-(.+)$/, cxtColorResolver('--un-ring-color', 'ring')],
-  [/^shadow-ctx-(.+)$/, cxtColorResolver('--un-shadow-color', 'shadow')],
-  [/^fill-ctx-(.+)$/, cxtColorResolver('fill', 'fill')],
-  [/^stroke-ctx-(.+)$/, cxtColorResolver('stroke', 'stroke')],
-  [/^text-stroke-ctx-(.+)$/, cxtColorResolver('-webkit-text-stroke-color', 'text-stroke')],
-  [/^text-shadow-color-ctx-(.+)$/, cxtColorResolver('--un-text-shadow-color', 'text-shadow')],
-  [/^accent-ctx-(.+)$/, cxtColorResolver('accent-color', 'accent')],
-  [/^caret-ctx-(.+)$/, cxtColorResolver('caret-color', 'caret')],
-  [/^divide-ctx-(.+)$/, cxtColorResolver('border-color', 'divide')],
-  [/^(?:filter-)?drop-shadow-color-ctx-(.+)$/, cxtColorResolver('--un-drop-shadow-color', 'drop-shadow')],
-  [/^placeholder-ctx-(.+)$/, cxtColorResolver('color', 'placeholder')],
+  [/^(?:text-color|text|color|c)-ctx-c-(.+)$/, cxtColorResolver('color', 'text')],
+  [/^outline-color-ctx-c-(.+)$/, cxtColorResolver('outline-color', 'outline-color')],
+  [/^bg-ctx-c-(.+)$/, cxtColorResolver('background-color', 'bg')],
+  [/^(?:underline|decoration)-ctx-c-(.+)$/, cxtColorResolver('text-decoration-color', 'line')],
+  [/^ring-offset-ctx-c-(.+)$/, cxtColorResolver('--un-ring-offset-color', 'ring-offset')],
+  [/^ring-ctx-c-(.+)$/, cxtColorResolver('--un-ring-color', 'ring')],
+  [/^shadow-ctx-c-(.+)$/, cxtColorResolver('--un-shadow-color', 'shadow')],
+  [/^fill-ctx-c-(.+)$/, cxtColorResolver('fill', 'fill')],
+  [/^stroke-ctx-c-(.+)$/, cxtColorResolver('stroke', 'stroke')],
+  [/^text-stroke-ctx-c-(.+)$/, cxtColorResolver('-webkit-text-stroke-color', 'text-stroke')],
+  [/^text-shadow-color-ctx-c-(.+)$/, cxtColorResolver('--un-text-shadow-color', 'text-shadow')],
+  [/^accent-ctx-c-(.+)$/, cxtColorResolver('accent-color', 'accent')],
+  [/^caret-ctx-c-(.+)$/, cxtColorResolver('caret-color', 'caret')],
+  [/^divide-ctx-c-(.+)$/, cxtColorResolver('border-color', 'divide')],
+  [/^(?:filter-)?drop-shadow-color-ctx-c-(.+)$/, cxtColorResolver('--un-drop-shadow-color', 'drop-shadow')],
+  [/^placeholder-ctx-c-(.+)$/, cxtColorResolver('color', 'placeholder')],
   // border color
-  [/^(?:border|b)-()(?:color-)?ctx-(.+)$/, cxtBorderColorResolver],
-  [/^(?:border|b)-([xy])-(?:color-)?ctx-(.+)$/, cxtBorderColorResolver],
-  [/^(?:border|b)-([rltbse])-(?:color-)?ctx-(.+)$/, cxtBorderColorResolver],
-  [/^(?:border|b)-(block|inline)-(?:color-)?ctx-(.+)$/, cxtBorderColorResolver],
-  [/^(?:border|b)-([bi][se])-(?:color-)?ctx-(.+)$/, cxtBorderColorResolver],
+  [/^(?:border|b)-()(?:color-)?ctx-c-(.+)$/, cxtBorderColorResolver],
+  [/^(?:border|b)-([xy])-(?:color-)?ctx-c-(.+)$/, cxtBorderColorResolver],
+  [/^(?:border|b)-([rltbse])-(?:color-)?ctx-c-(.+)$/, cxtBorderColorResolver],
+  [/^(?:border|b)-(block|inline)-(?:color-)?ctx-c-(.+)$/, cxtBorderColorResolver],
+  [/^(?:border|b)-([bi][se])-(?:color-)?ctx-c-(.+)$/, cxtBorderColorResolver],
   // bg gradient color
-  [/^(?:bg-gradient-)?(from)-ctx-(.+)$/, cxtBgGradientColorResolver],
-  [/^(?:bg-gradient-)?(via)-ctx-(.+)$/, cxtBgGradientColorResolver],
-  [/^(?:bg-gradient-)?(to)-ctx-(.+)$/, cxtBgGradientColorResolver],
+  [/^(?:bg-gradient-)?(from)-ctx-c-(.+)$/, cxtBgGradientColorResolver],
+  [/^(?:bg-gradient-)?(via)-ctx-c-(.+)$/, cxtBgGradientColorResolver],
+  [/^(?:bg-gradient-)?(to)-ctx-c-(.+)$/, cxtBgGradientColorResolver],
 ];
 
 /** Set color and lightness for the context */
@@ -64,23 +64,23 @@ export function resolveContextColor([, str]: string[], { theme }: RuleContext<Th
   }
 
   const parsedColor = parseColor(color, theme);
-  if (!parsedColor || !parsedColor.color || !parsedColor.cssColor) {
+  if (!parsedColor) {
     return;
   }
 
   let hslData: undefined | (string | number)[];
   // If it is an HSL type
-  if (parsedColor.cssColor.type === 'hsl') {
+  if (parsedColor.cssColor?.type === 'hsl') {
     hslData = parsedColor.cssColor.components;
   }
   // Otherwise, convert to HSL using magic-color
-  if (!hslData && mc.valid(parsedColor.color)) {
+  if (!hslData && parsedColor.color && mc.valid(parsedColor.color)) {
     hslData = mc(parsedColor.color).hsl();
   }
   // Less than 3 cannot be split，use origin color
   if (!hslData || hslData.length < 3) {
-    // => { '--ctx-color-${name}': '${parsedColor.color}' }
-    return { [ctxName('color', name)]: parsedColor.color };
+    // => { '--ctx-c-${name}': '${parsedColor.color}' }
+    return { [ctxName('c', name)]: parsedColor.color };
   }
 
   // Generate CSS variables corresponding to the color
@@ -89,11 +89,41 @@ export function resolveContextColor([, str]: string[], { theme }: RuleContext<Th
   s = String(s).replace('%', '');
   l = String(l).replace('%', '');
   return {
-    [ctxName('color', name, 'h')]: h,
-    [ctxName('color', name, 's')]: s,
-    [ctxName('color', name, 'l')]: l,
-    [ctxName('color', name, 'op')]: parsedColor.alpha || 1,
+    [ctxName('c', name, 'h')]: h,
+    [ctxName('c', name, 's')]: s,
+    [ctxName('c', name, 'l')]: l,
+    [ctxName('c', name, 'op')]: parsedColor.alpha || 1,
   };
+}
+
+/**
+ * Get color variables for string
+ * @param str css color string
+ * @returns color variables and opacity
+ */
+function getCxtColor(str: string) {
+  const [color, alpha] = str.split(/[:/]/);
+  const name = color.replace(/(.*)-\d+/, '$1');
+
+  // Dynamic lightness
+  let colorL = `var(${ctxName('c', name, 'l')})`;
+  const lightness = color.match(/.*-(\d+)/)?.[1] || '500'; // Take 500 as the base value
+  if (lightness) {
+    const diffL = (500 - Number(lightness)) / 10;
+    if (diffL) {
+      const reverse = `var(${ctxName('r', name)}, var(${ctxName('r')}, 1))`;
+      colorL = `calc(${colorL} + ${reverse} * ${diffL})`;
+    }
+  }
+  const colorH = `var(${ctxName('c', name, 'h')})`;
+  const colorS = `var(${ctxName('c', name, 's')})`;
+  const colorOp = `var(${ctxName('c', name, 'op')})`;
+
+  const origin = ctxName('c', name);
+  const value = `${colorH} ${colorS} ${colorL}`;
+  const opacity = alpha ? Number.parseInt(alpha) / 100 : colorOp;
+
+  return [origin, value, opacity];
 }
 
 /**
@@ -107,7 +137,7 @@ export function resolveContextColor([, str]: string[], { theme }: RuleContext<Th
  * cxtColorResolver('com-400', 'color', 'text')
  * => {
  *   '--un-text-opacity': 1,
- *   color: 'var(--ctx-color-com, hsl(var(--ctx-color-com-h) var(--ctx-color-com-s) calc(var(--ctx-color-com-l) + var(--ctx-bool-com, var(--ctx-bool)) * 10) / var(--un-text-opacity)))',
+ *   color: 'var(--ctx-c-com, hsl(var(--ctx-c-com-h) var(--ctx-c-com-s) calc(var(--ctx-c-com-l) + var(--ctx-r-com, var(--ctx-r)) * 10) / var(--un-text-opacity)))',
  * }
  * ```
  */
@@ -167,34 +197,4 @@ function cxtBgGradientColorResolver([, mode = '', b]: string[]) {
         '--un-gradient-to': `${colorString} var(--un-gradient-to-position)`,
       };
   }
-}
-
-/**
- * Get color variables for string
- * @param str css color string
- * @returns color variables and opacity
- */
-function getCxtColor(str: string) {
-  const [color, alpha] = str.split(/[:/]/);
-  const name = color.replace(/(.*)-\d+/, '$1');
-
-  const colorH = `var(${ctxName('color', name, 'h')})`;
-  const colorS = `var(${ctxName('color', name, 's')})`;
-  // Dynamic lightness
-  let colorL = `var(${ctxName('color', name, 'l')})`;
-  const lightness = color.match(/.*-(\d+)/)?.[1] || '500';
-  if (lightness) {
-    const diffL = (500 - Number(lightness)) / 10;
-    if (diffL) {
-      const reverse = `var(${ctxName('reverse', name)}, var(${ctxName('reverse')}, 1))`;
-      colorL = `calc(${colorL} + ${reverse} * ${diffL})`;
-    }
-  }
-  const colorOp = `var(${ctxName('color', name, 'op')})`;
-
-  const origin = ctxName('color', name);
-  const value = `${colorH} ${colorS} ${colorL}`;
-  const opacity = alpha ? Number.parseInt(alpha) / 100 : colorOp;
-
-  return [origin, value, opacity];
 }
