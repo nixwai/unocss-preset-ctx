@@ -15,6 +15,12 @@ export const zh = defineConfig({
           { text: '定制颜色', link: '/zh/custom-color' },
         ],
       },
+      {
+        text: '变量',
+        items: [
+          { text: '颜色', link: '/zh/context-color' },
+        ],
+      },
     ],
     docFooter: {
       prev: '上一页',

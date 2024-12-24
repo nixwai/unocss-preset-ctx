@@ -20,7 +20,7 @@ function setTheme(color: string) {
   </div>
 
   <div ref="demo" class="my-2">
-    <button class="bg-primary c-white px-2 rounded-md">
+    <button class="px-2 bg-primary c-white rounded-md">
       button
     </button>
   </div>

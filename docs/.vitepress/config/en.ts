@@ -15,6 +15,12 @@ export const en = defineConfig({
           { text: 'Custom Color', link: '/custom-color' },
         ],
       },
+      {
+        text: 'Variables',
+        items: [
+          { text: 'Color', link: '/context-color' },
+        ],
+      },
     ],
   },
 });
