@@ -9,7 +9,7 @@ export default defineConfig({
   title: 'unocss preset ctx',
   rewrites: { 'en/:rest*': ':rest*' },
   base: '/unocss-preset-ctx/',
-  outDir: resolve(__dirname, '../../dist/docs'),
+  outDir: resolve(__dirname, '../../../dist/docs'),
   vite: {
     plugins: [UnoCSS() as any],
     css: { preprocessorOptions: { scss: { api: 'modern-compiler' } } },
