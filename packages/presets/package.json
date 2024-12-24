@@ -1,9 +1,0 @@
-{
-  "name": "@unocss-preset/ctx",
-  "description": "unocss presets ctx",
-  "main": "index.ts",
-  "dependencies": {
-    "@unocss/preset-mini": "catalog:",
-    "magic-color": "catalog:"
-  }
-}
