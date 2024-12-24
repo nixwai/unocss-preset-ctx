@@ -1,12 +1,13 @@
 import { resolve } from 'node:path';
 import UnoCSS from 'unocss/vite';
 import { defineConfig } from 'vitepress';
+import { en } from './en';
+import { zh } from './zh';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  lang: 'en',
   title: 'unocss preset ctx',
-  description: 'Make it easier to create css context variables and modify element styles.',
+  rewrites: { 'en/:rest*': ':rest*' },
   base: '/unocss-preset-ctx/',
   outDir: resolve(__dirname, '../../dist/docs'),
   vite: {
@@ -14,22 +15,18 @@ export default defineConfig({
     css: { preprocessorOptions: { scss: { api: 'modern-compiler' } } },
   },
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'getting-start', link: '/en/getting-start' },
-    ],
-
-    sidebar: [
-      {
-        text: 'Guide',
-        items: [
-          { text: 'getting-start', link: '/en/getting-start' },
-        ],
-      },
-    ],
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/nixwai/unocss-preset-ctx' },
     ],
+  },
+  locales: {
+    root: {
+      label: 'English',
+      ...en,
+    },
+    zh: {
+      label: '中文',
+      ...zh,
+    },
   },
 });
