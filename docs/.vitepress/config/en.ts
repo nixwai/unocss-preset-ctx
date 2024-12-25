@@ -16,8 +16,9 @@ export const en = defineConfig({
         ],
       },
       {
-        text: 'Variables',
+        text: 'Presets',
         items: [
+          { text: 'Shortcuts', link: '/context-shortcuts' },
           { text: 'Color', link: '/context-color' },
         ],
       },

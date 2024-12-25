@@ -1,6 +1,6 @@
 # Color ( ctx-c )
 
-## Definition
+## Basic Usage
 
 Defines the `class` of the format `ctx-c-${name}_${color}` in the element. You can get a CSS variable called `ctx-c-${name}` with the value `${color}`. Then `class` after this element can use `ctx-c-${name}` as the color value.
 
