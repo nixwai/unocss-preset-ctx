@@ -1,7 +1,7 @@
 {
   "name": "unocss-preset-ctx",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Developed based on UnoCss, modify the style of the context by means of css variables.",
   "author": "nixwai",
   "license": "ISC",
