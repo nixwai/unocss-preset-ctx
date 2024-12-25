@@ -7,7 +7,10 @@ export const shortcuts: CustomShortcut[] = [
       const [name, value] = str.split('_');
       if (value) {
         const presets = value.split(',').join(' ');
-        return `[&.ctxs-${name}]:(${presets}) [&>.ctxs-${name}]:(${presets})`;
+        return [
+          `[&.ctxs-${name}]:(${presets})`,
+          `[&>.ctxs-${name}]:(${presets})`,
+        ];
       }
     },
   ],

@@ -1,6 +1,6 @@
 # 颜色 ( ctx-c )
 
-## 定义
+## 基本用法
 
 在元素的`class`中通过`ctx-c-${name}_${color}`的格式便可以定义一个名为`ctx-c-${name}`，颜色值为`${color}`的CSS变量。之后该元素下的`class`便可使用`ctx-c-${name}`的作为颜色值。
 

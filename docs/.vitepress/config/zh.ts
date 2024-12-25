@@ -18,6 +18,7 @@ export const zh = defineConfig({
       {
         text: '预设',
         items: [
+          { text: '快捷方式', link: '/zh/context-shortcuts' },
           { text: '颜色', link: '/zh/context-color' },
         ],
       },
