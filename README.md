@@ -2,7 +2,7 @@
 
 ## Introduction
 
-unocss-preset-ctx is an extension library based on UnoCSS that provides additional preset rules. It facilitates the creation of CSS context variables to modify element styles.
+unocss-preset-ctx is an extension library based on UnoCSS that provides additional preset rules. Make it easier to modify element styles in the context of CSS.
 
 For example:
 
@@ -10,7 +10,7 @@ For example:
 <div class="ctx-c-text_[#3451b2] ctx-c-bg_gray dark:ctx-r-y">
   <span class="c-ctx-c-text-700 bg-ctx-c-bg-300 px-1">Hello</span>
   <span class="c-ctx-c-text-300 bg-ctx-c-bg-700 px-1">World</span>
-</div>
+</div>
 ```
 
 ## Usage

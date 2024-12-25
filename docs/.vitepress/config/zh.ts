@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 export const zh = defineConfig({
   lang: 'zh-CN',
-  description: '更轻松的创建css上下文变量和修改元素样式',
+  description: '通过Class上下文修改元素样式',
   themeConfig: {
     nav: [
       { text: '指南', link: '/zh/getting-start' },
@@ -16,7 +16,7 @@ export const zh = defineConfig({
         ],
       },
       {
-        text: '变量',
+        text: '预设',
         items: [
           { text: '颜色', link: '/zh/context-color' },
         ],
