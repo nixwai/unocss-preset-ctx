@@ -18,6 +18,9 @@ function handleClick() {
     <button class="bg-ctx-c-btn">
       <span class="c-ctx-c-txt">button</span>
     </button>
+    <button class="bg-ctx-c-btn-100">
+      <span class="c-ctx-c-txt-600">button</span>
+    </button>
     <button class="bg-ctx-c-btn-300">
       <span class="c-ctx-c-txt-550">button</span>
     </button>

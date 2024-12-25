@@ -4,7 +4,7 @@
 
 Defines the `class` of the format `ctx-c-${name}_${color}` in the element. You can get a CSS variable called `ctx-c-${name}` with the value `${color}`. Then `class` after this element can use `ctx-c-${name}` as the color value.
 
-When using this, you can add a suffix `-${num}` to the variable name to control the brightness of the color. The brightness is based on `500`. Higher values make the color brighter, while lower values make it darker.
+When using this, you can add a suffix `-${num}` to the variable name to control the brightness of the color. The brightness is based on `500`. Higher values make the color brighter, while lower values make it darker. The adjusted range is between `5` and `95`.
 
 <demo vue="context-color/base.vue"/>
 
