@@ -112,7 +112,7 @@ function getCxtColor(str: string) {
     const diffL = (500 - Number(lightness)) / 10;
     if (diffL) {
       const reverse = `var(${ctxName('r', name)}, var(${ctxName('r')}, 1))`;
-      colorL = `calc(${colorL} + ${reverse} * ${diffL})`;
+      colorL = `clamp(5, calc(${colorL} + ${reverse} * ${diffL}), 95)`;
     }
   }
   const colorH = `var(${ctxName('c', name, 'h')})`;
