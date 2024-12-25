@@ -11,7 +11,7 @@ function setTheme(color: string) {
 <template>
   <div class="flex">
     <div>toggle: </div>
-    <button class="mx-1 c-blue" @click="setTheme('blue')">
+    <button class="c-blue mx-1" @click="setTheme('blue')">
       blue
     </button>
     <button class="c-green" @click="setTheme('green')">

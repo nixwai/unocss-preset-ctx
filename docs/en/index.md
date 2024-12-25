@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Unocss preset ctx"
-  tagline: Make it easier to create css context variables and modify element styles
+  tagline: Make it easier to modify element styles with CSS context
   actions:
     - theme: brand
       text: Getting Started
