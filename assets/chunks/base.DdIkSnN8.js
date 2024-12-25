@@ -1,5 +1,5 @@
 import{_ as a,o as s,c as r,j as n,d as l,p as x,a0 as o,n as u}from"./framework.danP1z9m.js";const _=`<template>\r
-  <div class="ctx-c-bg_gray flex ctx-c-txt_primary">\r
+  <div class="flex ctx-c-bg_gray ctx-c-txt_primary">\r
     <div class="px-2 c-ctx-c-txt-700 bg-ctx-c-bg-300">\r
       light\r
     </div>\r
@@ -8,7 +8,7 @@ import{_ as a,o as s,c as r,j as n,d as l,p as x,a0 as o,n as u}from"./framework
     </div>\r
   </div>\r
 </template>\r
-`,d={},p={class:"ctx-c-bg_gray flex ctx-c-txt_primary"};function v(e,t){return s(),r("div",p,t[0]||(t[0]=[n("div",{class:"px-2 c-ctx-c-txt-700 bg-ctx-c-bg-300"}," light ",-1),n("div",{class:"c-ctx-c-txt-700 bg-ctx-c-bg-300 px-2 ctx-r-y"}," dark ",-1)]))}const V=a(d,[["render",v]]),C=`<script setup lang="ts">\r
+`,d={},p={class:"flex ctx-c-bg_gray ctx-c-txt_primary"};function v(e,t){return s(),r("div",p,t[0]||(t[0]=[n("div",{class:"px-2 c-ctx-c-txt-700 bg-ctx-c-bg-300"}," light ",-1),n("div",{class:"c-ctx-c-txt-700 bg-ctx-c-bg-300 px-2 ctx-r-y"}," dark ",-1)]))}const V=a(d,[["render",v]]),C=`<script setup lang="ts">\r
 import { ref } from 'vue';\r
 \r
 const v = ref(true);\r
