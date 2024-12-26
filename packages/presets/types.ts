@@ -4,7 +4,3 @@ import type { DynamicShortcut, Rule, StaticShortcut } from 'unocss';
 export type CustomRule = Rule<Theme>;
 
 export type CustomShortcut = StaticShortcut | DynamicShortcut<Theme>;
-
-export interface PresetCtxOptions {
-  colors?: string[]
-}
