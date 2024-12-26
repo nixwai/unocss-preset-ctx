@@ -6,15 +6,15 @@ unocss-preset-ctx 是一个基于 UnoCSS 扩展的预设库，提供了更多的
 
 例如：
 
-<div class="ctx-c-text_[#3451b2] ctx-c-bg_gray dark:ctx-r-y">
-  <span class="c-ctx-c-text-700 bg-ctx-c-bg-300 px-1">Hello</span>
-  <span class="c-ctx-c-text-300 bg-ctx-c-bg-700 px-1">World</span>
+<div class="ctxs-p_px-1 ctx-c-text_[#3451b2] ctx-c-bg_gray dark:ctx-r-y">
+  <span class="ctxs-p c-ctx-c-text-700 bg-ctx-c-bg-300">Hello</span>
+  <span class="ctxs-p c-ctx-c-text-300 bg-ctx-c-bg-700">World</span>
 </div>
 
 ```html [unocss]
-<div class="ctx-c-text_[#3451b2] ctx-c-bg_gray dark:ctx-r-y">
-  <span class="c-ctx-c-text-700 bg-ctx-c-bg-300 px-1">Hello</span>
-  <span class="c-ctx-c-text-300 bg-ctx-c-bg-700 px-1">World</span>
+<div class="ctxs-p_px-1 ctx-c-text_[#3451b2] ctx-c-bg_gray dark:ctx-r-y">
+  <span class="ctxs-p c-ctx-c-text-700 bg-ctx-c-bg-300">Hello</span>
+  <span class="ctxs-p c-ctx-c-text-300 bg-ctx-c-bg-700">World</span>
 </div>
 ```
 

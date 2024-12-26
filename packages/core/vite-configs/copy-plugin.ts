@@ -8,7 +8,7 @@ export function copyPlugin(outputPath: string) {
     hook: 'buildStart',
     targets: [
       {
-        src: 'README.md',
+        src: '../../../README.md',
         dest: outputPath,
       },
       {

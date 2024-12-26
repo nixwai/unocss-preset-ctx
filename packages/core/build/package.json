@@ -2,13 +2,20 @@
   "name": "unocss-preset-ctx",
   "type": "module",
   "version": "0.2.2",
-  "description": "Developed based on UnoCss, modify the style of the context by means of css variables.",
-  "author": "nixwai",
-  "license": "ISC",
+  "description": "Developed based on UnoCss. Make it easier to modify element styles in the context of CSS.",
+  "author": "nixwai <https://github.com/nixwai>",
+  "license": "MIT",
+  "homepage": "https://nixwai.github.io/unocss-preset-ctx/",
   "repository": {
     "type": "git",
     "url": "https://github.com/nixwai/unocss-preset-ctx"
   },
+  "keywords": [
+    "css",
+    "unocss",
+    "unocss preset"
+  ],
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
@@ -26,9 +33,11 @@
     "dist",
     "types"
   ],
-  "devDependencies": {
+  "dependencies": {
     "@unocss/preset-mini": "catalog:",
-    "magic-color": "catalog:",
+    "magic-color": "catalog:"
+  },
+  "devDependencies": {
     "unocss": "catalog:"
   }
 }

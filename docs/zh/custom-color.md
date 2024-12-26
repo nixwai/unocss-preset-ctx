@@ -29,7 +29,7 @@ export default defineConfig({
 
 ## 动态修改
 
-使用`themeColors`时会在CSS中生成对应颜色变量，因此只要通过修改这个颜色变量，就可以更新对应的颜色了。因此预设中提供了`updateThemeColor`方法，可以更加方便去覆盖这些颜色。
+使用`themeColors`时会在CSS中生成对应颜色变量，因此只要通过修改这个颜色变量，就可以更新对应的颜色了。预设中提供了`updateThemeColor`方法，可以更加方便去覆盖这些颜色。
 
 参数`dom`可用来指定覆盖的范围，传入`document.documentElement`时即可覆盖整个页面的颜色。
 
