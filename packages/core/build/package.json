@@ -1,7 +1,7 @@
 {
   "name": "unocss-preset-ctx",
   "type": "module",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Developed based on UnoCss. Make it easier to modify element styles in the context of CSS.",
   "author": "nixwai <https://github.com/nixwai>",
   "license": "MIT",
