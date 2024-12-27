@@ -58,7 +58,8 @@ export const color: CustomRule[] = [
 /** Set color and lightness for the context */
 export function resolveContextColor([, str]: string[], { theme }: RuleContext<Theme>) {
   // Use "_" to separate name、 color
-  const [name, color] = str.split('_');
+  const [name, hue] = str.split('_');
+  const [color, alpha] = hue?.split(/[:/]/) || [];
   if (!color) {
     return;
   }
@@ -77,6 +78,11 @@ export function resolveContextColor([, str]: string[], { theme }: RuleContext<Th
   if (!hslData && parsedColor.color && mc.valid(parsedColor.color)) {
     hslData = mc(parsedColor.color).hsl();
   }
+  // if the color is ctx color
+  if (!hslData && color.slice(0, 6) === 'ctx-c-') {
+    const n = color.slice(6);
+    hslData = [`var(${ctxName('c', n, 'h')})`, `var(${ctxName('c', n, 's')})`, `var(${ctxName('c', n, 'l')})`];
+  }
   // Less than 3 cannot be split，use origin color
   if (!hslData || hslData.length < 3) {
     // => { '--ctx-c-${name}': '${parsedColor.color}' }
@@ -92,7 +98,7 @@ export function resolveContextColor([, str]: string[], { theme }: RuleContext<Th
     [ctxName('c', name, 'h')]: h,
     [ctxName('c', name, 's')]: s,
     [ctxName('c', name, 'l')]: l,
-    [ctxName('c', name, 'op')]: parsedColor.alpha || 1,
+    [ctxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : 1,
   };
 }
 
