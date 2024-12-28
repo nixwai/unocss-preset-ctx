@@ -60,7 +60,8 @@ function resolveContextColor([, str]: string[], { theme }: RuleContext<Theme>) {
 }
 
 /** Set color and lightness for the context */
-export function resolveCtxColor(str: string, theme: Theme) {
+export function resolveCtxColor(str: string, theme?: Theme) {
+  str = str.replace(/^ctx-c-(.*)/, '$1');
   // Use "_" to separate name、 color
   const [name, hue] = str.split('_');
   const [color, alpha] = hue?.split(/[:/]/) || [];
@@ -68,20 +69,24 @@ export function resolveCtxColor(str: string, theme: Theme) {
     return;
   }
 
-  const parsedColor = parseColor(color, theme);
-  if (!parsedColor) {
-    return;
+  let hslData: undefined | (string | number)[];
+
+  if (theme) {
+    const parsedColor = parseColor(color, theme);
+    if (!parsedColor) {
+      return;
+    }
+    // If it is an HSL type
+    if (parsedColor.cssColor?.type === 'hsl') {
+      hslData = parsedColor.cssColor.components;
+    }
   }
 
-  let hslData: undefined | (string | number)[];
-  // If it is an HSL type
-  if (parsedColor.cssColor?.type === 'hsl') {
-    hslData = parsedColor.cssColor.components;
-  }
   // Otherwise, convert to HSL using magic-color
-  if (!hslData && parsedColor.color && mc.valid(parsedColor.color)) {
-    hslData = mc(parsedColor.color).hsl();
+  if (!hslData && mc.valid(color)) {
+    hslData = mc(color).hsl();
   }
+
   // if the color is ctx color
   if (!hslData && color.slice(0, 6) === 'ctx-c-') {
     const ctxColor = color.slice(6);
@@ -99,10 +104,11 @@ export function resolveCtxColor(str: string, theme: Theme) {
       hslData = [`var(${ctxName('c', ctxN, 'h')})`, `var(${ctxName('c', ctxN, 's')})`, `var(${ctxName('c', ctxN, 'l')})`];
     }
   }
+
   // Less than 3 cannot be split，use origin color
   if (!hslData || hslData.length < 3) {
-    // => { '--ctx-c-${name}': '${parsedColor.color}' }
-    return { [ctxName('c', name)]: parsedColor.color };
+    // => { '--ctx-c-${name}': '${color}' }
+    return { [ctxName('c', name)]: color };
   }
 
   // Generate CSS variables corresponding to the color

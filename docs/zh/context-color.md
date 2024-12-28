@@ -21,3 +21,32 @@
 颜色变量允许你使用其他颜色变量赋值，这会让你的颜色变得更加灵活，当然也会更加复杂。
 
 <demo vue="context-color/assign.vue"/>
+
+## 获取原始css颜色变量
+
+预设中提供了`resolveCtxColor`方法，能够直接获取到`ctx-c-${name}_${color}`生成的变量值，这或许能够帮助你定义全局的颜色变量。
+
+前缀`ctx-c-`可加也可不加。如果`color`是主题颜色时，必须要在第二个参数中传入unocss的`theme`。
+
+```ts
+import { defineConfig, presetUno } from 'unocss';
+import { presetCtx, resolveCtxColor } from 'unocss-preset-ctx';
+
+export default defineConfig({
+  presets: [presetUno(), presetCtx()],
+  preflights: [
+    {
+      getCSS: ({ theme }) => {
+        const ctxColor = resolveCtxColor('tt_primary', theme);
+        if (ctxColor) {
+          return `
+            :root {
+              ${Object.entries(ctxColor).map(([k, v]) => `${k}: ${v};`).join('\n')}
+            }
+          `;
+        }
+      },
+    },
+  ],
+});
+```
