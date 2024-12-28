@@ -55,8 +55,13 @@ export const color: CustomRule[] = [
   [/^(?:bg-gradient-)?(to)-ctx-c-(.+)$/, cxtBgGradientColorResolver],
 ];
 
+function resolveContextColor([, str]: string[], { theme }: RuleContext<Theme>) {
+  return resolveCtxColor(str, theme);
+}
+
 /** Set color and lightness for the context */
-export function resolveContextColor([, str]: string[], { theme }: RuleContext<Theme>) {
+export function resolveCtxColor(str: string, theme?: Theme) {
+  str = str.replace(/^ctx-c-(.*)/, '$1');
   // Use "_" to separate name、 color
   const [name, hue] = str.split('_');
   const [color, alpha] = hue?.split(/[:/]/) || [];
@@ -64,29 +69,46 @@ export function resolveContextColor([, str]: string[], { theme }: RuleContext<Th
     return;
   }
 
-  const parsedColor = parseColor(color, theme);
-  if (!parsedColor) {
-    return;
+  let hslData: undefined | (string | number)[];
+
+  if (theme) {
+    const parsedColor = parseColor(color, theme);
+    if (!parsedColor) {
+      return;
+    }
+    // If it is an HSL type
+    if (parsedColor.cssColor?.type === 'hsl') {
+      hslData = parsedColor.cssColor.components;
+    }
   }
 
-  let hslData: undefined | (string | number)[];
-  // If it is an HSL type
-  if (parsedColor.cssColor?.type === 'hsl') {
-    hslData = parsedColor.cssColor.components;
-  }
   // Otherwise, convert to HSL using magic-color
-  if (!hslData && parsedColor.color && mc.valid(parsedColor.color)) {
-    hslData = mc(parsedColor.color).hsl();
+  if (!hslData && mc.valid(color)) {
+    hslData = mc(color).hsl();
   }
+
   // if the color is ctx color
   if (!hslData && color.slice(0, 6) === 'ctx-c-') {
-    const n = color.slice(6);
-    hslData = [`var(${ctxName('c', n, 'h')})`, `var(${ctxName('c', n, 's')})`, `var(${ctxName('c', n, 'l')})`];
+    const ctxColor = color.slice(6);
+    const ctxN = ctxColor.replace(/(.*)-\d+/, '$1');
+    const ctxL = ctxColor.match(/.*-(\d+)/)?.[1] || '500';
+    const diffL = (500 - Number(ctxL)) / 10;
+    if (diffL) {
+      hslData = [
+        `var(${ctxName('c', ctxN, 'h')})`,
+        `var(${ctxName('c', ctxN, 's')})`,
+        `calc(var(${ctxName('c', ctxN, 'l')}) + ${diffL})`,
+      ];
+    }
+    else {
+      hslData = [`var(${ctxName('c', ctxN, 'h')})`, `var(${ctxName('c', ctxN, 's')})`, `var(${ctxName('c', ctxN, 'l')})`];
+    }
   }
+
   // Less than 3 cannot be split，use origin color
   if (!hslData || hslData.length < 3) {
-    // => { '--ctx-c-${name}': '${parsedColor.color}' }
-    return { [ctxName('c', name)]: parsedColor.color };
+    // => { '--ctx-c-${name}': '${color}' }
+    return { [ctxName('c', name)]: color };
   }
 
   // Generate CSS variables corresponding to the color
@@ -114,12 +136,10 @@ function getCxtColor(str: string) {
   // Dynamic lightness
   let colorL = `var(${ctxName('c', name, 'l')})`;
   const lightness = color.match(/.*-(\d+)/)?.[1] || '500'; // Take 500 as the base value
-  if (lightness) {
-    const diffL = (500 - Number(lightness)) / 10;
-    if (diffL) {
-      const reverse = `var(${ctxName('r', name)}, var(${ctxName('r')}, 1))`;
-      colorL = `clamp(5, calc(${colorL} + ${reverse} * ${diffL}), 95)`;
-    }
+  const diffL = (500 - Number(lightness)) / 10;
+  if (diffL) {
+    const reverse = `var(${ctxName('r', name)}, var(${ctxName('r')}, 1))`;
+    colorL = `clamp(5, calc(${colorL} + ${reverse} * ${diffL}), 95)`;
   }
   const colorH = `var(${ctxName('c', name, 'h')})`;
   const colorS = `var(${ctxName('c', name, 's')})`;
