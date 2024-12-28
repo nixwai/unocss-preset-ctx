@@ -13,6 +13,8 @@ export const presetCtx = definePreset<undefined, Theme>(() => {
   };
 });
 
+export { resolveCtxColor } from './rules/color';
+
 export { themeColors } from './theme';
 
 export * from './types';

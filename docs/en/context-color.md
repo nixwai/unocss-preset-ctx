@@ -15,3 +15,9 @@ When using `-${num}` to control the brightness, you can reverse the brightness b
 If you use `ctx-r-n`, it indicates that no reversal should be applied.
 
 <demo vue="context-color/reverse.vue"/>
+
+## Multiple Assignment
+
+Color variables allow you to assign values using other color variables, which makes your colors more flexible, but also more complex.
+
+<demo vue="context-color/assign.vue"/>

@@ -15,3 +15,9 @@
 如果使用 `ctx-r-n`，则表示不进行反转。
 
 <demo vue="context-color/reverse.vue"/>
+
+## 多重赋值
+
+颜色变量允许你使用其他颜色变量赋值，这会让你的颜色变得更加灵活，当然也会更加复杂。
+
+<demo vue="context-color/assign.vue"/>
