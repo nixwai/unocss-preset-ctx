@@ -2,7 +2,9 @@
   "name": "core",
   "version": "0.0.1",
   "scripts": {
-    "preset:build": "gulp -f build/gulp-build.ts"
+    "preset:release": "gulp -f build/gulp-release.ts",
+    "preset:build": "gulp -f build/gulp-build.ts",
+    "preset:publish": "gulp -f build/gulp-publish.ts"
   },
   "devDependencies": {
     "@types/gulp": "catalog:",
