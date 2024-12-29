@@ -64,31 +64,14 @@ export function resolveCtxColor(str: string, theme?: Theme) {
   str = str.replace(/^ctx-c-(.*)/, '$1');
   // Use "_" to separate name、 color
   const [name, hue] = str.split('_');
-  const [color, alpha] = hue?.split(/[:/]/) || [];
+  let [color, alpha] = hue?.split(/[:/]/) || [];
   if (!color) {
     return;
   }
 
-  let hslData: undefined | (string | number)[];
-
-  if (theme) {
-    const parsedColor = parseColor(color, theme);
-    if (!parsedColor) {
-      return;
-    }
-    // If it is an HSL type
-    if (parsedColor.cssColor?.type === 'hsl') {
-      hslData = parsedColor.cssColor.components;
-    }
-  }
-
-  // Otherwise, convert to HSL using magic-color
-  if (!hslData && mc.valid(color)) {
-    hslData = mc(color).hsl();
-  }
-
   // if the color is ctx color
-  if (!hslData && color.slice(0, 6) === 'ctx-c-') {
+  if (color.slice(0, 6) === 'ctx-c-') {
+    let hslData: undefined | (string | number)[];
     const ctxColor = color.slice(6);
     const ctxN = ctxColor.replace(/(.*)-\d+/, '$1');
     const ctxL = ctxColor.match(/.*-(\d+)/)?.[1] || '500';
@@ -103,15 +86,36 @@ export function resolveCtxColor(str: string, theme?: Theme) {
     else {
       hslData = [`var(${ctxName('c', ctxN, 'h')})`, `var(${ctxName('c', ctxN, 's')})`, `var(${ctxName('c', ctxN, 'l')})`];
     }
+    return generateCSSVariables(hslData, name, alpha);
   }
 
-  // Less than 3 cannot be split，use origin color
-  if (!hslData || hslData.length < 3) {
-    // => { '--ctx-c-${name}': '${color}' }
-    return { [ctxName('c', name)]: color };
+  if (theme) {
+    const parsedColor = parseColor(color, theme);
+    if (!parsedColor) {
+      return;
+    }
+    if (parsedColor.color) {
+      color = parsedColor.color;
+    }
+    // If it is an HSL type
+    if (parsedColor.cssColor?.type === 'hsl') {
+      const hslData = parsedColor.cssColor.components;
+      return generateCSSVariables(hslData, name, alpha);
+    }
   }
 
-  // Generate CSS variables corresponding to the color
+  // Otherwise, convert to HSL using magic-color
+  if (mc.valid(color)) {
+    const hslData = mc(color).hsl();
+    return generateCSSVariables(hslData, name, alpha);
+  }
+
+  // => { '--ctx-c-${name}': '${color}' }
+  return { [ctxName('c', name)]: color };
+}
+
+/** Generate CSS variables corresponding to the color */
+function generateCSSVariables(hslData: (string | number)[], name: string, alpha?: string) {
   let [h, s, l] = hslData;
   h = String(h).replace('deg', '');
   s = String(s).replace('%', '');
