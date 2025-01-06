@@ -71,22 +71,21 @@ export function resolveCtxColor(str: string, theme?: Theme) {
 
   // if the color is ctx color
   if (color.slice(0, 6) === 'ctx-c-') {
-    let hslData: undefined | (string | number)[];
     const ctxColor = color.slice(6);
     const ctxN = ctxColor.replace(/(.*)-\d+/, '$1');
     const ctxL = ctxColor.match(/.*-(\d+)/)?.[1] || '500';
     const diffL = (500 - Number(ctxL)) / 10;
+    let colorL = `var(${ctxName('c', ctxN, 'l')})`;
     if (diffL) {
-      hslData = [
-        `var(${ctxName('c', ctxN, 'h')})`,
-        `var(${ctxName('c', ctxN, 's')})`,
-        `calc(var(${ctxName('c', ctxN, 'l')}) + ${diffL})`,
-      ];
+      const reverse = `var(${ctxName('r', ctxN)}, var(${ctxName('r')}, 1))`;
+      colorL = `calc(${colorL} + ${reverse} * ${diffL})`;
     }
-    else {
-      hslData = [`var(${ctxName('c', ctxN, 'h')})`, `var(${ctxName('c', ctxN, 's')})`, `var(${ctxName('c', ctxN, 'l')})`];
-    }
-    return generateCSSVariables(hslData, name, alpha);
+    return {
+      [ctxName('c', name, 'h')]: `var(${ctxName('c', ctxN, 'h')})`,
+      [ctxName('c', name, 's')]: `var(${ctxName('c', ctxN, 's')})`,
+      [ctxName('c', name, 'l')]: colorL,
+      [ctxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : `var(${ctxName('c', ctxN, 'op')})`,
+    };
   }
 
   if (theme) {
@@ -110,7 +109,7 @@ export function resolveCtxColor(str: string, theme?: Theme) {
     return generateCSSVariables(hslData, name, alpha);
   }
 
-  // => { '--ctx-c-${name}': '${color}' }
+  // can not resolve => { '--ctx-c-${name}': '${color}' }
   return { [ctxName('c', name)]: color };
 }
 
@@ -144,6 +143,9 @@ function getCxtColor(str: string) {
   if (diffL) {
     const reverse = `var(${ctxName('r', name)}, var(${ctxName('r')}, 1))`;
     colorL = `clamp(5, calc(${colorL} + ${reverse} * ${diffL}), 95)`;
+  }
+  else {
+    colorL = `clamp(5, ${colorL}, 95)`;
   }
   const colorH = `var(${ctxName('c', name, 'h')})`;
   const colorS = `var(${ctxName('c', name, 's')})`;
