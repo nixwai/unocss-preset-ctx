@@ -131,17 +131,17 @@ function generateCSSVariables(hslData: (string | number)[], name: string, alpha?
  */
 function getCxtColor(str: string, varName: string) {
   const [color, alpha] = str.split(/[:/]/);
-  const name = color.replace(/(.*)-\d+/, '$1');
+  const name = color.replace(/(.*)-\d+/, '$1').replace(/(.*)-$/, '$1');
   // Get reverse
   const reverseVar = ctxName('', varName, 'reverse');
   const reverseValue = toVar(ctxName('r', name), toVar(ctxName('r'), 1));
   // Get diffL
   const lightnessVar = ctxName('', varName, 'lightness');
   let lightnessValue = toVar(ctxName('c', name, 'l'));
-  const degree = color.match(/.*-(\d+)/)?.[1]; // Take 500 as the base value
+  const degree = color.match(/-(-?\d+)$/)?.[1];
   const diffValue = degree ? (500 - Number(degree)) / 10 : toVar(ctxName('l', name), 0);
   if (diffValue) {
-    lightnessValue = `clamp(5, calc(${lightnessValue} + ${toVar(reverseVar)} * ${diffValue}), 95)`;
+    lightnessValue = `clamp(15, calc(${lightnessValue} + ${toVar(reverseVar)} * ${diffValue}), 95)`;
   }
   // Get color variables
   const colorH = toVar(ctxName('c', name, 'h'));
