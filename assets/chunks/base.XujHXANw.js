@@ -1,4 +1,4 @@
-import{_ as n,o as s,c as o,j as c}from"./framework.danP1z9m.js";const r=`<template>\r
+import{_ as n,o as s,c as o,j as c}from"./framework.BFGFFC7y.js";const r=`<template>\r
   <div class="ctxs-btn_mx-1,px-2,b-1,b-solid,rounded-md">\r
     <button class="c-blue ctxs-btn">\r
       button\r
