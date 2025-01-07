@@ -38,7 +38,6 @@ function handleClick() {
 
 <style scoped>
 button {
-  color: white;
   padding: 4px 8px;
   border-radius: 4px;
   margin: 0 4px;

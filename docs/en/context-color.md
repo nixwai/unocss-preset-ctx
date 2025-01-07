@@ -4,15 +4,33 @@
 
 Define a CSS variable in the element's `class` using the format `ctx-c-${name}_${color}`. This creates a CSS variable named `ctx-c-${name}` with the value `${color}`. Subsequent `class` entries within this element can then use `ctx-c-${name}` as a color value.
 
-To control the brightness of the color, add a suffix `-${num}` to the variable name. The brightness is based on `500`; smaller values make the color brighter, while larger values make it darker. The adjusted range is between `5` and `95`.
-
 <demo vue="context-color/base.vue"/>
+
+## Opacity
+
+The method of controlling opacity in `unocss` is also applicable in `ctx-c`. You can append the opacity value to the preset name when defining or using it.
+
+Additionally, you can modify the opacity of properties using `ctx-op-${name}-${num}` for elements that use `ctx-c-${name}`, with a lower priority compared to directly appending a suffix to the property.
+
+<demo vue="context-color/opacity.vue"/>
+
+## Brightness
+
+You can control the brightness of colors by adding a suffix `-${num}` after properties using `ctx-c-${name}`. The brightness is based on `500`, where smaller values make the color brighter and larger values make it darker.
+
+Additionally, you can modify the brightness of properties using `ctx-l-${name}-${num}` for elements that use `ctx-c-${name}`, with a lower priority compared to directly appending a suffix to the property.
+
+::: tip Note
+The actual range of adjusted color brightness will be limited between 15% and 95%.
+:::
+
+<demo vue="context-color/brightness.vue"/>
 
 ## Reverse Brightness
 
-When using `-${num}` to control the brightness, you can reverse the brightness behavior with `ctx-r-y`. This makes higher values result in brighter colors and lower values in darker colors. Using `ctx-r-${name}-y` allows you to specify which color name should have its brightness reversed.
+When using the `ctx` method to control color brightness, you can use `ctx-r-y` to invert the brightness, making the color brighter with larger values and darker with smaller values. Using `ctx-r-${name}-y` allows you to specify the inversion of brightness for a particular color name only.
 
-If you use `ctx-r-n`, it indicates that no reversal should be applied.
+If you use `ctx-r-n`, it indicates that the inversion should be canceled.
 
 <demo vue="context-color/reverse.vue"/>
 

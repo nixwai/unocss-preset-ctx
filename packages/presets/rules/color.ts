@@ -3,7 +3,7 @@ import type { CSSObject, RuleContext } from 'unocss';
 import type { CustomRule } from '../types';
 import { parseColor } from '@unocss/preset-mini';
 import { mc } from 'magic-color';
-import { ctxName } from '../utils';
+import { ctxName, toVar } from '../utils';
 
 const directionMap: Record<string, string[]> = {
   'l': ['-left'],
@@ -68,27 +68,25 @@ export function resolveCtxColor(str: string, theme?: Theme) {
   if (!color) {
     return;
   }
-
   // if the color is ctx color
   if (color.slice(0, 6) === 'ctx-c-') {
-    let hslData: undefined | (string | number)[];
     const ctxColor = color.slice(6);
     const ctxN = ctxColor.replace(/(.*)-\d+/, '$1');
     const ctxL = ctxColor.match(/.*-(\d+)/)?.[1] || '500';
     const diffL = (500 - Number(ctxL)) / 10;
+    let colorL = toVar(ctxName('c', ctxN, 'l'));
     if (diffL) {
-      hslData = [
-        `var(${ctxName('c', ctxN, 'h')})`,
-        `var(${ctxName('c', ctxN, 's')})`,
-        `calc(var(${ctxName('c', ctxN, 'l')}) + ${diffL})`,
-      ];
+      const reverse = toVar(ctxName('r', ctxN), toVar(ctxName('r'), 1));
+      colorL = `calc(${colorL} + ${reverse} * ${diffL})`;
     }
-    else {
-      hslData = [`var(${ctxName('c', ctxN, 'h')})`, `var(${ctxName('c', ctxN, 's')})`, `var(${ctxName('c', ctxN, 'l')})`];
-    }
-    return generateCSSVariables(hslData, name, alpha);
+    return {
+      [ctxName('c', name, 'h')]: toVar(ctxName('c', ctxN, 'h')),
+      [ctxName('c', name, 's')]: toVar(ctxName('c', ctxN, 's')),
+      [ctxName('c', name, 'l')]: colorL,
+      [ctxName('op', name)]: alpha ? Number(alpha) / 100 : toVar(ctxName('op', ctxN)),
+    };
   }
-
+  // If the color can resolve by theme
   if (theme) {
     const parsedColor = parseColor(color, theme);
     if (!parsedColor) {
@@ -103,14 +101,12 @@ export function resolveCtxColor(str: string, theme?: Theme) {
       return generateCSSVariables(hslData, name, alpha);
     }
   }
-
   // Otherwise, convert to HSL using magic-color
   if (mc.valid(color)) {
     const hslData = mc(color).hsl();
     return generateCSSVariables(hslData, name, alpha);
   }
-
-  // => { '--ctx-c-${name}': '${color}' }
+  // can not resolve => { '--ctx-c-${name}': '${color}' }
   return { [ctxName('c', name)]: color };
 }
 
@@ -124,7 +120,7 @@ function generateCSSVariables(hslData: (string | number)[], name: string, alpha?
     [ctxName('c', name, 'h')]: h,
     [ctxName('c', name, 's')]: s,
     [ctxName('c', name, 'l')]: l,
-    [ctxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : 1,
+    [ctxName('op', name)]: alpha ? Number(alpha) / 100 : 1,
   };
 }
 
@@ -133,27 +129,36 @@ function generateCSSVariables(hslData: (string | number)[], name: string, alpha?
  * @param str css color string
  * @returns color variables and opacity
  */
-function getCxtColor(str: string) {
+function getCxtColor(str: string, varName: string) {
   const [color, alpha] = str.split(/[:/]/);
-  const name = color.replace(/(.*)-\d+/, '$1');
-
-  // Dynamic lightness
-  let colorL = `var(${ctxName('c', name, 'l')})`;
-  const lightness = color.match(/.*-(\d+)/)?.[1] || '500'; // Take 500 as the base value
-  const diffL = (500 - Number(lightness)) / 10;
-  if (diffL) {
-    const reverse = `var(${ctxName('r', name)}, var(${ctxName('r')}, 1))`;
-    colorL = `clamp(5, calc(${colorL} + ${reverse} * ${diffL}), 95)`;
+  const name = color.replace(/(.*)-\d+/, '$1').replace(/(.*)-$/, '$1');
+  // Get reverse
+  const reverseVar = ctxName('', varName, 'reverse');
+  const reverseValue = toVar(ctxName('r', name), toVar(ctxName('r'), 1));
+  // Get diffL
+  const lightnessVar = ctxName('', varName, 'lightness');
+  let lightnessValue = toVar(ctxName('c', name, 'l'));
+  const degree = color.match(/-(-?\d+)$/)?.[1];
+  const diffValue = degree ? (500 - Number(degree)) / 10 : toVar(ctxName('l', name), 0);
+  if (diffValue) {
+    lightnessValue = `clamp(15, calc(${lightnessValue} + ${toVar(reverseVar)} * ${diffValue}), 95)`;
   }
-  const colorH = `var(${ctxName('c', name, 'h')})`;
-  const colorS = `var(${ctxName('c', name, 's')})`;
-  const colorOp = `var(${ctxName('c', name, 'op')})`;
+  // Get color variables
+  const colorH = toVar(ctxName('c', name, 'h'));
+  const colorS = toVar(ctxName('c', name, 's'));
+  const colorL = toVar(lightnessVar);
+  const colorValue = `${colorH} ${colorS} ${colorL}`;
+  // Get opacity
+  const opValue = alpha ? Number.parseInt(alpha) / 100 : toVar(ctxName('op', name));
+  // Get origin
+  const originVar = ctxName('c', name);
 
-  const origin = ctxName('c', name);
-  const value = `${colorH} ${colorS} ${colorL}`;
-  const opacity = alpha ? Number.parseInt(alpha) / 100 : colorOp;
+  const variables = {
+    [reverseVar]: reverseValue,
+    [lightnessVar]: lightnessValue,
+  };
 
-  return [origin, value, opacity];
+  return { originVar, colorValue, opValue, variables };
 }
 
 /**
@@ -173,10 +178,11 @@ function getCxtColor(str: string) {
  */
 function cxtColorResolver(property: string, varName: string) {
   return ([, str]: string[]): CSSObject | undefined => {
-    const [origin, value, opacity] = getCxtColor(str);
+    const { originVar, colorValue, opValue, variables } = getCxtColor(str, varName);
     return {
-      [`--un-${varName}-opacity`]: opacity,
-      [property]: `var(${origin}, hsl(${value} / var(--un-${varName}-opacity)))`,
+      ...variables,
+      [`--un-${varName}-opacity`]: opValue,
+      [property]: toVar(originVar, `hsl(${colorValue} / var(--un-${varName}-opacity))`),
     };
   };
 }
@@ -184,31 +190,37 @@ function cxtColorResolver(property: string, varName: string) {
 /** Use css variables to control border color values */
 function cxtBorderColorResolver([, a = '', b]: string[]) {
   if (a in directionMap) {
-    const [origin, value, opacity] = getCxtColor(b);
     if (!a) {
+      const { originVar, colorValue, opValue, variables } = getCxtColor(b, 'border');
       return {
-        '--un-border-opacity': opacity,
-        'border-color': `var(${origin}, hsl(${value} / var(--un-border-opacity)))`,
+        ...variables,
+        '--un-border-opacity': opValue,
+        'border-color': toVar(originVar, `hsl(${colorValue} / var(--un-border-opacity))`),
       };
     }
+    const { originVar, colorValue, opValue, variables } = getCxtColor(b, `border-${a}`);
     return Object.assign(
-      { '--un-border-opacity': opacity },
-      ...directionMap[a].map(direction => ({
-        [`--un-border${direction}-opacity`]: opacity,
-        [`border${direction}-color`]: `var(${origin}, hsl(${value} / var(--un-border${direction}-opacity)))`,
-      })),
+      {},
+      variables,
+      ...directionMap[a].map((direction) => {
+        return {
+          [`--un-border${direction}-opacity`]: toVar('--un-border-opacity', opValue),
+          [`border${direction}-color`]: toVar(originVar, `hsl(${colorValue} / var(--un-border${direction}-opacity))`),
+        };
+      }),
     );
   }
 }
 
 /** Use css variables to control bg gradient color values */
 function cxtBgGradientColorResolver([, mode = '', b]: string[]) {
-  const [origin, value, opacity] = getCxtColor(b);
-  const colorString = `var(${origin}, hsl(${value} / var(--un-${mode}-opacity, ${opacity})))`;
+  const { originVar, colorValue, opValue, variables } = getCxtColor(b, mode);
+  const colorString = toVar(originVar, `hsl(${colorValue} / ${toVar(`--un-${mode}-opacity`, opValue)})`);
 
   switch (mode) {
     case 'from':
       return {
+        ...variables,
         '--un-gradient-from-position': '0%',
         '--un-gradient-from': `${colorString} var(--un-gradient-from-position)`,
         '--un-gradient-to-position': '100%',
@@ -217,12 +229,14 @@ function cxtBgGradientColorResolver([, mode = '', b]: string[]) {
       };
     case 'via':
       return {
+        ...variables,
         '--un-gradient-via-position': '50%',
         '--un-gradient-to': 'rgb(255 255 255 / 0)',
         '--un-gradient-stops': `var(--un-gradient-from), ${colorString} var(--un-gradient-via-position), var(--un-gradient-to)`,
       };
     case 'to':
       return {
+        ...variables,
         '--un-gradient-to-position': '100%',
         '--un-gradient-to': `${colorString} var(--un-gradient-to-position)`,
       };
