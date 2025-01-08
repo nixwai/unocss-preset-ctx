@@ -181,8 +181,7 @@ function cxtColorResolver(property: string, varName: string) {
     const { originVar, colorValue, opValue, variables } = getCxtColor(str, varName);
     return {
       ...variables,
-      [`--un-${varName}-opacity`]: opValue,
-      [property]: toVar(originVar, `hsl(${colorValue} / var(--un-${varName}-opacity))`),
+      [property]: toVar(originVar, `hsl(${colorValue} / ${toVar(`--un-${varName}-opacity`, opValue)})`),
     };
   };
 }
@@ -194,8 +193,7 @@ function cxtBorderColorResolver([, a = '', b]: string[]) {
       const { originVar, colorValue, opValue, variables } = getCxtColor(b, 'border');
       return {
         ...variables,
-        '--un-border-opacity': opValue,
-        'border-color': toVar(originVar, `hsl(${colorValue} / var(--un-border-opacity))`),
+        'border-color': toVar(originVar, `hsl(${colorValue} / ${toVar('--un-border-opacity', opValue)})`),
       };
     }
     const { originVar, colorValue, opValue, variables } = getCxtColor(b, `border-${a}`);
@@ -203,10 +201,8 @@ function cxtBorderColorResolver([, a = '', b]: string[]) {
       {},
       variables,
       ...directionMap[a].map((direction) => {
-        return {
-          [`--un-border${direction}-opacity`]: toVar('--un-border-opacity', opValue),
-          [`border${direction}-color`]: toVar(originVar, `hsl(${colorValue} / var(--un-border${direction}-opacity))`),
-        };
+        const opacity = toVar(`--un-border${direction}-opacity`, toVar('--un-border-opacity', opValue));
+        return { [`border${direction}-color`]: toVar(originVar, `hsl(${colorValue} / ${opacity})`) };
       }),
     );
   }
