@@ -135,7 +135,7 @@ function getCxtColor(str: string, varName: string) {
   // Get reverse
   const reverseVar = ctxName('', varName, 'reverse');
   const reverseValue = toVar(ctxName('r', name), toVar(ctxName('r'), 1));
-  // Get lightness
+  // Get diffL
   const lightnessVar = ctxName('', varName, 'lightness');
   let lightnessValue = toVar(ctxName('c', name, 'l'));
   const degree = color.match(/-(-?\d+)$/)?.[1];
@@ -143,8 +143,7 @@ function getCxtColor(str: string, varName: string) {
   if (diffValue) {
     lightnessValue = `clamp(15, calc(${lightnessValue} + ${toVar(reverseVar)} * ${diffValue}), 95)`;
   }
-  // Get color
-  const colorVar = ctxName('', varName, 'color');
+  // Get color variables
   const colorH = toVar(ctxName('c', name, 'h'));
   const colorS = toVar(ctxName('c', name, 's'));
   const colorL = toVar(lightnessVar);
@@ -157,10 +156,9 @@ function getCxtColor(str: string, varName: string) {
   const variables = {
     [reverseVar]: reverseValue,
     [lightnessVar]: lightnessValue,
-    [colorVar]: colorValue,
   };
 
-  return { originVar, colorVar, opValue, variables };
+  return { originVar, colorValue, opValue, variables };
 }
 
 /**
@@ -180,12 +178,10 @@ function getCxtColor(str: string, varName: string) {
  */
 function cxtColorResolver(property: string, varName: string) {
   return ([, str]: string[]): CSSObject | undefined => {
-    const { originVar, colorVar, opValue, variables } = getCxtColor(str, varName);
-    const opVar = ctxName('', varName, 'opacity');
+    const { originVar, colorValue, opValue, variables } = getCxtColor(str, varName);
     return {
       ...variables,
-      [opVar]: toVar(`--un-${varName}-opacity`, opValue),
-      [property]: toVar(originVar, `hsl(${toVar(colorVar)} / ${toVar(opVar)})`),
+      [property]: toVar(originVar, `hsl(${colorValue} / ${toVar(`--un-${varName}-opacity`, opValue)})`),
     };
   };
 }
@@ -194,24 +190,19 @@ function cxtColorResolver(property: string, varName: string) {
 function cxtBorderColorResolver([, a = '', b]: string[]) {
   if (a in directionMap) {
     if (!a) {
-      const { originVar, colorVar, opValue, variables } = getCxtColor(b, 'border');
-      const opVar = ctxName('', 'border', 'opacity');
+      const { originVar, colorValue, opValue, variables } = getCxtColor(b, 'border');
       return {
         ...variables,
-        [opVar]: toVar('--un-border-opacity', opValue),
-        'border-color': toVar(originVar, `hsl(${toVar(colorVar)} / ${toVar(opVar)})`),
+        'border-color': toVar(originVar, `hsl(${colorValue} / ${toVar('--un-border-opacity', opValue)})`),
       };
     }
-    const { originVar, colorVar, opValue, variables } = getCxtColor(b, `border-${a}`);
+    const { originVar, colorValue, opValue, variables } = getCxtColor(b, `border-${a}`);
     return Object.assign(
       {},
       variables,
       ...directionMap[a].map((direction) => {
-        const opVar = ctxName('', `border${direction}`, 'opacity');
-        return {
-          [opVar]: toVar(`--un-border${direction}-opacity`, toVar('--un-border-opacity', opValue)),
-          [`border${direction}-color`]: toVar(originVar, `hsl(${toVar(colorVar)} / ${toVar(opVar)})`),
-        };
+        const opacity = toVar(`--un-border${direction}-opacity`, toVar('--un-border-opacity', opValue));
+        return { [`border${direction}-color`]: toVar(originVar, `hsl(${colorValue} / ${opacity})`) };
       }),
     );
   }
@@ -219,8 +210,8 @@ function cxtBorderColorResolver([, a = '', b]: string[]) {
 
 /** Use css variables to control bg gradient color values */
 function cxtBgGradientColorResolver([, mode = '', b]: string[]) {
-  const { originVar, colorVar, opValue, variables } = getCxtColor(b, mode);
-  const colorString = toVar(originVar, `hsl(${toVar(colorVar)} / ${toVar(`--un-${mode}-opacity`, opValue)})`);
+  const { originVar, colorValue, opValue, variables } = getCxtColor(b, mode);
+  const colorString = toVar(originVar, `hsl(${colorValue} / ${toVar(`--un-${mode}-opacity`, opValue)})`);
 
   switch (mode) {
     case 'from':
