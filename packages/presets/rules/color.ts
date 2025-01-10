@@ -83,7 +83,7 @@ export function resolveCtxColor(str: string, theme?: Theme) {
       [ctxName('c', name, 'h')]: toVar(ctxName('c', ctxN, 'h')),
       [ctxName('c', name, 's')]: toVar(ctxName('c', ctxN, 's')),
       [ctxName('c', name, 'l')]: colorL,
-      [ctxName('op', name)]: alpha ? Number(alpha) / 100 : toVar(ctxName('op', ctxN)),
+      [ctxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : toVar(ctxName('op', ctxN), toVar(ctxName('c', ctxN, 'op'))),
     };
   }
   // If the color can resolve by theme
@@ -120,7 +120,7 @@ function generateCSSVariables(hslData: (string | number)[], name: string, alpha?
     [ctxName('c', name, 'h')]: h,
     [ctxName('c', name, 's')]: s,
     [ctxName('c', name, 'l')]: l,
-    [ctxName('op', name)]: alpha ? Number(alpha) / 100 : 1,
+    [ctxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : 1,
   };
 }
 
@@ -150,7 +150,7 @@ function getCxtColor(str: string, varName: string) {
   const colorL = toVar(lightnessVar);
   const colorValue = `${colorH} ${colorS} ${colorL}`;
   // Get opacity
-  const opValue = alpha ? Number.parseInt(alpha) / 100 : toVar(ctxName('op', name));
+  const opValue = alpha ? Number.parseInt(alpha) / 100 : toVar(ctxName('op', name), toVar(ctxName('c', name, 'op')));
   // Get origin
   const originVar = ctxName('c', name);
 
