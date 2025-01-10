@@ -14,7 +14,7 @@ export const opacity: CustomRule[] = [
       const ctxN = ctxName('op', ctx1);
       // lightness can be assign by other ctx-op
       if (ctx2?.slice(0, 7) === 'ctx-op-') {
-        const op = (Number(value) - 100) / 10;
+        const op = (Number(value) - 100) / 100;
         if (op) {
           return { [ctxN]: `calc(${toVar(`--${ctx2}`, 1)} + ${op})` };
         }
