@@ -18,7 +18,7 @@ Additionally, you can modify the opacity of properties using `ctx-op-${name}-${n
 
 You can control the brightness of colors by adding a suffix `-${num}` after properties using `ctx-c-${name}`. The brightness is based on `500`, where smaller values make the color brighter and larger values make it darker.
 
-Additionally, you can modify the brightness of properties using `ctx-l-${name}-${num}` for elements that use `ctx-c-${name}`, with a lower priority compared to directly appending a suffix to the property.
+Additionally, you can modify the brightness of properties using `ctx-deg-${name}-${num}` for elements that use `ctx-c-${name}`, with a lower priority compared to directly appending a suffix to the property.
 
 ::: tip Note
 The actual range of adjusted color brightness will be limited between 15% and 95%.

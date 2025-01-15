@@ -1,5 +1,5 @@
 import { mc } from 'magic-color';
-import { ctxName, hslValue } from './utils';
+import { toCtxName, toHslValue } from './utils';
 
 /**
  * Modify the value of the color variable
@@ -32,16 +32,16 @@ function getHslColors(name: string, color: string) {
   const colors: string[][] = [];
   const defaultHsl = mc(color).hsl();
   colors.push(
-    [ctxName(name, 'DEFAULT', 'h'), String(defaultHsl[0])],
-    [ctxName(name, 'DEFAULT', 's'), String(defaultHsl[1])],
-    [ctxName(name, 'DEFAULT', 'l'), String(defaultHsl[2])],
+    [toCtxName(name, 'DEFAULT', 'h'), String(defaultHsl[0])],
+    [toCtxName(name, 'DEFAULT', 's'), String(defaultHsl[1])],
+    [toCtxName(name, 'DEFAULT', 'l'), String(defaultHsl[2])],
   );
   Object.entries(theme).forEach(([k, v]) => {
-    const [h, s, l] = hslValue(v).split(' ');
+    const [h, s, l] = toHslValue(v).split(' ');
     colors.push(
-      [ctxName(name, k, 'h'), h],
-      [ctxName(name, k, 's'), s],
-      [ctxName(name, k, 'l'), l],
+      [toCtxName(name, k, 'h'), h],
+      [toCtxName(name, k, 's'), s],
+      [toCtxName(name, k, 'l'), l],
     );
   });
   return colors;

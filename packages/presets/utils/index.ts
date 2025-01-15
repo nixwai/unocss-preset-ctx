@@ -1,12 +1,12 @@
 /**
  * --ctx-${ary.join('-')}
  */
-export function ctxName(...ary: (string | number)[]) {
+export function toCtxName(...ary: (string | number)[]) {
   return `--ctx-${ary.join('-')}`;
 }
 
 /** Get HSL color value */
-export function hslValue(color?: string) {
+export function toHslValue(color?: string) {
   return color?.match(/\d+\s[\d\s]+/)?.[0] || '';
 }
 
