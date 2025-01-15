@@ -1,5 +1,5 @@
 import type { CustomRule } from '../types';
-import { ctxName, toVar } from '../utils';
+import { toCtxName, toVar } from '../utils';
 
 export const opacity: CustomRule[] = [
   [
@@ -10,18 +10,20 @@ export const opacity: CustomRule[] = [
       if (!name) {
         return;
       }
-      const [ctx1, ctx2] = name.split('_');
-      const ctxN = ctxName('op', ctx1);
+      let [ctx1, ctx2] = name.split('_');
+      const ctxVar = toCtxName('op', ctx1);
       // lightness can be assign by other ctx-op
       if (ctx2?.slice(0, 7) === 'ctx-op-') {
+        ctx2 = ctx2.slice(7);
         const op = (Number(value) - 100) / 100;
+        const ctx2Value = toVar(toCtxName('op', ctx2), toVar(toCtxName('c', ctx2, 'op'), 1));
         if (op) {
-          return { [ctxN]: `calc(${toVar(`--${ctx2}`, 1)} + ${op})` };
+          return { [ctxVar]: `calc(${ctx2Value} + ${op})` };
         }
-        return { [ctxN]: toVar(`--${ctx2}`, 1) };
+        return { [ctxVar]: ctx2Value };
       }
       if (value) {
-        return { [ctxN]: Number(value) / 100 };
+        return { [ctxVar]: Number(value) / 100 };
       }
     },
   ],

@@ -3,7 +3,7 @@
     <button class="bg-ctx-c-btn-600">
       button
     </button>
-    <div class="ctx-l-btn-800">
+    <div class="ctx-deg-btn-800">
       <button class="bg-ctx-c-btn">
         button
       </button>

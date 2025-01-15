@@ -1,6 +1,6 @@
 import type { Theme } from '@unocss/preset-mini';
 import { mc } from 'magic-color';
-import { ctxName, hslValue } from '../utils';
+import { toCtxName, toHslValue } from '../utils';
 
 type Colors = Theme['colors'];
 
@@ -33,9 +33,9 @@ export function themeColors(options: Record<string, string>): Colors {
  * @returns Dynamic CSS variable value corresponding to the HSL value
  */
 function getHslColorValue(name: string, color: string) {
-  const [h, s, l] = hslValue(color).split(' ');
-  const hue = `var(${ctxName(`${name}`, 'h')}, ${h})`;
-  const saturation = `var(${ctxName(`${name}`, 's')}, ${s})`;
-  const lightness = `var(${ctxName(`${name}`, 'l')}, ${l})`;
+  const [h, s, l] = toHslValue(color).split(' ');
+  const hue = `var(${toCtxName(`${name}`, 'h')}, ${h})`;
+  const saturation = `var(${toCtxName(`${name}`, 's')}, ${s})`;
+  const lightness = `var(${toCtxName(`${name}`, 'l')}, ${l})`;
   return `hsl(${hue} ${saturation} ${lightness})`;
 }

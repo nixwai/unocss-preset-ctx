@@ -3,7 +3,7 @@ import type { CSSObject, RuleContext } from 'unocss';
 import type { CustomRule } from '../types';
 import { parseColor } from '@unocss/preset-mini';
 import { mc } from 'magic-color';
-import { ctxName, toVar } from '../utils';
+import { toCtxName, toVar } from '../utils';
 
 const directionMap: Record<string, string[]> = {
   'l': ['-left'],
@@ -72,20 +72,23 @@ export function resolveCtxColor(str: string, theme?: Theme) {
   if (color.slice(0, 6) === 'ctx-c-') {
     const ctxColor = color.slice(6);
     const ctxN = ctxColor.replace(/(.*)-\d+/, '$1');
-    const ctxL = ctxColor.match(/.*-(\d+)/)?.[1] || '500';
-    const diffL = (500 - Number(ctxL)) / 10;
-    let colorL = toVar(ctxName('c', ctxN, 'l'));
-    if (diffL) {
-      const reverse = toVar(ctxName('r', ctxN), toVar(ctxName('r'), 1));
-      colorL = `calc(${colorL} + ${reverse} * ${diffL})`;
+    const degree = ctxColor.match(/.*-(\d+)/)?.[1];
+    const diffValue = (500 - Number(degree || 500)) / 10;
+    let colorL = toVar(toCtxName('c', ctxN, 'l'));
+    if (diffValue) {
+      const reverse = toVar(toCtxName('r', ctxN), toVar(toCtxName('r'), 1));
+      colorL = `calc(${colorL} + ${reverse} * ${diffValue})`;
     }
     return {
-      [ctxName('c', name, 'h')]: toVar(ctxName('c', ctxN, 'h')),
-      [ctxName('c', name, 's')]: toVar(ctxName('c', ctxN, 's')),
-      [ctxName('c', name, 'l')]: colorL,
-      [ctxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : toVar(ctxName('op', ctxN), toVar(ctxName('c', ctxN, 'op'))),
+      [toCtxName('c', name, 'h')]: toVar(toCtxName('c', ctxN, 'h')),
+      [toCtxName('c', name, 's')]: toVar(toCtxName('c', ctxN, 's')),
+      [toCtxName('c', name, 'l')]: colorL,
+      [toCtxName('c', name, 'deg')]: degree ? diffValue : toVar(toCtxName('deg', ctxN), toVar(toCtxName('c', ctxN, 'deg'))),
+      [toCtxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : toVar(toCtxName('op', ctxN), toVar(toCtxName('c', ctxN, 'op'))),
     };
   }
+  const degree = color.match(/.*-(\d+)/)?.[1] || '500';
+  const diffValue = (500 - Number(degree)) / 10;
   // If the color can resolve by theme
   if (theme) {
     const parsedColor = parseColor(color, theme);
@@ -98,29 +101,30 @@ export function resolveCtxColor(str: string, theme?: Theme) {
     // If it is an HSL type
     if (parsedColor.cssColor?.type === 'hsl') {
       const hslData = parsedColor.cssColor.components;
-      return generateCSSVariables(hslData, name, alpha);
+      return generateCSSVariables(hslData, name, diffValue, alpha);
     }
   }
   // Otherwise, convert to HSL using magic-color
   if (mc.valid(color)) {
     const hslData = mc(color).hsl();
-    return generateCSSVariables(hslData, name, alpha);
+    return generateCSSVariables(hslData, name, diffValue, alpha);
   }
   // can not resolve => { '--ctx-c-${name}': '${color}' }
-  return { [ctxName('c', name)]: color };
+  return { [toCtxName('c', name)]: color };
 }
 
 /** Generate CSS variables corresponding to the color */
-function generateCSSVariables(hslData: (string | number)[], name: string, alpha?: string) {
+function generateCSSVariables(hslData: (string | number)[], name: string, diffValue: number, alpha?: string) {
   let [h, s, l] = hslData;
   h = String(h).replace('deg', '');
   s = String(s).replace('%', '');
   l = String(l).replace('%', '');
   return {
-    [ctxName('c', name, 'h')]: h,
-    [ctxName('c', name, 's')]: s,
-    [ctxName('c', name, 'l')]: l,
-    [ctxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : 1,
+    [toCtxName('c', name, 'h')]: h,
+    [toCtxName('c', name, 's')]: s,
+    [toCtxName('c', name, 'l')]: l,
+    [toCtxName('c', name, 'deg')]: diffValue,
+    [toCtxName('c', name, 'op')]: alpha ? Number(alpha) / 100 : 1,
   };
 }
 
@@ -133,26 +137,26 @@ function getCxtColor(str: string, varName: string) {
   const [color, alpha] = str.split(/[:/]/);
   const name = color.replace(/(.*)-\d+/, '$1').replace(/(.*)-$/, '$1');
   // Get reverse
-  const reverseVar = ctxName('', varName, 'reverse');
-  const reverseValue = toVar(ctxName('r', name), toVar(ctxName('r'), 1));
+  const reverseVar = toCtxName('', varName, 'reverse');
+  const reverseValue = toVar(toCtxName('r', name), toVar(toCtxName('r'), 1));
   // Get lightness
-  const lightnessVar = ctxName('', varName, 'lightness');
-  let lightnessValue = toVar(ctxName('c', name, 'l'));
+  const lightnessVar = toCtxName('', varName, 'lightness');
+  let lightnessValue = toVar(toCtxName('c', name, 'l'));
   const degree = color.match(/-(-?\d+)$/)?.[1];
-  const diffValue = degree ? (500 - Number(degree)) / 10 : toVar(ctxName('l', name), 0);
+  const diffValue = degree ? (500 - Number(degree)) / 10 : toVar(toCtxName('deg', name), 0);
   if (diffValue) {
     lightnessValue = `clamp(15, calc(${lightnessValue} + ${toVar(reverseVar)} * ${diffValue}), 95)`;
   }
   // Get color
-  const colorVar = ctxName('', varName, 'color');
-  const colorH = toVar(ctxName('c', name, 'h'));
-  const colorS = toVar(ctxName('c', name, 's'));
+  const colorVar = toCtxName('', varName, 'color');
+  const colorH = toVar(toCtxName('c', name, 'h'));
+  const colorS = toVar(toCtxName('c', name, 's'));
   const colorL = toVar(lightnessVar);
   const colorValue = `${colorH} ${colorS} ${colorL}`;
   // Get opacity
-  const opValue = alpha ? Number.parseInt(alpha) / 100 : toVar(ctxName('op', name), toVar(ctxName('c', name, 'op')));
+  const opValue = alpha ? Number.parseInt(alpha) / 100 : toVar(toCtxName('op', name), toVar(toCtxName('c', name, 'op')));
   // Get origin
-  const originVar = ctxName('c', name);
+  const originVar = toCtxName('c', name);
 
   const variables = {
     [reverseVar]: reverseValue,
@@ -181,7 +185,7 @@ function getCxtColor(str: string, varName: string) {
 function cxtColorResolver(property: string, varName: string) {
   return ([, str]: string[]): CSSObject | undefined => {
     const { originVar, colorVar, opValue, variables } = getCxtColor(str, varName);
-    const opVar = ctxName('', varName, 'opacity');
+    const opVar = toCtxName('', varName, 'opacity');
     return {
       ...variables,
       [opVar]: toVar(`--un-${varName}-opacity`, opValue),
@@ -195,7 +199,7 @@ function cxtBorderColorResolver([, a = '', b]: string[]) {
   if (a in directionMap) {
     if (!a) {
       const { originVar, colorVar, opValue, variables } = getCxtColor(b, 'border');
-      const opVar = ctxName('', 'border', 'opacity');
+      const opVar = toCtxName('', 'border', 'opacity');
       return {
         ...variables,
         [opVar]: toVar('--un-border-opacity', opValue),
@@ -207,7 +211,7 @@ function cxtBorderColorResolver([, a = '', b]: string[]) {
       {},
       variables,
       ...directionMap[a].map((direction) => {
-        const opVar = ctxName('', `border${direction}`, 'opacity');
+        const opVar = toCtxName('', `border${direction}`, 'opacity');
         return {
           [opVar]: toVar(`--un-border${direction}-opacity`, toVar('--un-border-opacity', opValue)),
           [`border${direction}-color`]: toVar(originVar, `hsl(${toVar(colorVar)} / ${toVar(opVar)})`),
