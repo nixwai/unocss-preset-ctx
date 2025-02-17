@@ -9,7 +9,7 @@ export const shortcuts: CustomShortcut[] = [
         const presets = value.split(',').join(' ');
         return [
           `[&.ctxs-${name}]:(${presets})`,
-          `[&>.ctxs-${name}]:(${presets})`,
+          `[&_.ctxs-${name}]:(${presets})`,
         ];
       }
     },
