@@ -1,7 +1,7 @@
-import { presetCtx, themeColors } from '@unocss-preset/ctx';
-import { defineConfig, presetUno } from 'unocss';
+import { defineConfig, presetWind3 } from 'unocss';
+import { presetCtx, themeColors } from 'unocss-preset-ctx';
 
 export default defineConfig({
   theme: { colors: themeColors({ primary: '#3451b2' }) },
-  presets: [presetUno(), presetCtx()],
+  presets: [presetWind3(), presetCtx()],
 });

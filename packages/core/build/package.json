@@ -34,10 +34,10 @@
     "types"
   ],
   "dependencies": {
-    "@unocss/preset-mini": "^0.65.2",
+    "@unocss/preset-mini": "^66.0.0",
     "magic-color": "^2.0.0"
   },
   "devDependencies": {
-    "unocss": "^0.65.2"
+    "unocss": "^66.0.0"
   }
 }
