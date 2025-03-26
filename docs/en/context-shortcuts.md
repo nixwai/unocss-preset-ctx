@@ -2,7 +2,7 @@
 
 ## Basic Usage
 
-Define in the element's `class` using the format `ctxs-${name}_${rules}`, after which using `ctxs-${name}` under this element will apply the corresponding preset `rules`. Multiple rules can be separated by `,`.
+In the element's class attribute, use the format ctxs-${name}_${rules} for definition. Once defined, both the element and its children can apply the corresponding preset rules by using ctxs-${name}/${name} as either a class name or attribute. Multiple rules can be separated by ,.
 
 <demo vue="context-shortcuts/base.vue"/>
 

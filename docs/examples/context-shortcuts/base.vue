@@ -3,7 +3,7 @@
     <button class="c-blue ctxs-btn">
       button
     </button>
-    <button class="ctxs-btn c-yellow">
+    <button btn class="c-yellow">
       button
     </button>
   </div>
