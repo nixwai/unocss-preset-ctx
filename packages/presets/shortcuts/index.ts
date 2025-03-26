@@ -8,8 +8,7 @@ export const shortcuts: CustomShortcut[] = [
       if (value) {
         const presets = value.split(',').join(' ');
         return [
-          `[&.ctxs-${name}]:(${presets})`,
-          `[&_.ctxs-${name}]:(${presets})`,
+          `[&.ctxs-${name},&_.ctxs-${name},&.${name},&_.${name},&[${name}],&_[${name}]]:(${presets})`,
         ];
       }
     },
