@@ -29,6 +29,11 @@
     "typescript": "catalog:",
     "unocss": "catalog:"
   },
+  "pnpm": {
+    "overrides": {
+      "glob@^7.2.3": "^10.4.5"
+    }
+  },
   "resolutions": {
     "esbuild": "0.24.0"
   },
